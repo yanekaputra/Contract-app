@@ -135,56 +135,26 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+<tbody>
                         <?php foreach ($expiring_soon as $doc): ?>
                             <tr>
-                                <td><?= htmlspecialchars($s['full_name']) ?></td>
-                            <td><?= htmlspecialchars($s['position']) ?></td>
-                            <td><?= htmlspecialchars($s['department']) ?></td>
-                            <td>
-                                <?php if ($s['has_str']): ?>
+                                <td><?= htmlspecialchars($doc['full_name']) ?></td>
+                                <td><?= htmlspecialchars($doc['nip']) ?></td>
+                                <td><?= htmlspecialchars($doc['category']) ?></td>
+                                <td><?= htmlspecialchars($doc['document_name']) ?></td>
+                                <td><?= htmlspecialchars(date('d/m/Y', strtotime($doc['expiry_date']))) ?></td>
+                                <td>
                                     <?php
                                     require_once dirname(__DIR__) . '/../Helpers/DateHelper.php';
-                                    echo DateHelper::getStatusBadge($s['str_days_remaining']);
+                                    echo DateHelper::getStatusBadge($doc['days_remaining']);
                                     ?>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary">N/A</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <?php if ($s['has_sip']): ?>
-                                    <?php echo DateHelper::getStatusBadge($s['sip_days_remaining']); ?>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary">N/A</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <a href="<?= BASE_URL ?>/staff/view/<?= $s['employee_id'] ?>" 
-                                   class="btn btn-sm btn-info" title="Lihat Detail">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <?php if (in_array($_SESSION['user_role'], ['admin', 'hr'])): ?>
-                                <a href="<?= BASE_URL ?>/staff/edit/<?= $s['employee_id'] ?>" 
-                                   class="btn btn-sm btn-warning" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="<?= BASE_URL ?>/contracts/create/<?= $s['employee_id'] ?>" 
-                                   class="btn btn-sm btn-success" title="Tambah Kontrak">
-                                    <i class="bi bi-file-plus"></i>
-                                </a>
-                                <?php endif; ?>
-                                <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                                <button onclick="confirmDelete(<?= $s['employee_id'] ?>)" 
-                                        class="btn btn-sm btn-danger" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
