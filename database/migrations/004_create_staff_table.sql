@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS staff (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT NOT NULL,
+    position VARCHAR(100),
+    department VARCHAR(100),
+    education_level VARCHAR(50),
+    str_number VARCHAR(50),
+    str_file VARCHAR(255),
+    str_issue_date DATE,
+    str_expiry_date DATE,
+    sip_number VARCHAR(50),
+    sip_file VARCHAR(255),
+    sip_issue_date DATE,
+    sip_expiry_date DATE,
+    has_str BOOLEAN DEFAULT FALSE,
+    has_sip BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+    INDEX idx_position (position)
+);

@@ -1,0 +1,199 @@
+<?php require_once dirname(__DIR__) . '/layouts/header.php'; ?>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Dashboard</h2>
+    <button class="btn btn-primary" onclick="checkExpiryDates()">
+        <i class="bi bi-arrow-clockwise"></i> Refresh Data
+    </button>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Karyawan</h6>
+                        <h2 class="mb-0"><?= $total_employees ?></h2>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Dokter</h6>
+                        <h2 class="mb-0"><?= $total_doctors ?></h2>
+                    </div>
+                    <i class="bi bi-person-badge" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Total Staff</h6>
+                        <h2 class="mb-0"><?= $total_staff ?></h2>
+                    </div>
+                    <i class="bi bi-person" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title">Dokumen Akan Expired</h6>
+                        <h2 class="mb-0"><?= $expiring_documents ?></h2>
+                    </div>
+                    <i class="bi bi-exclamation-triangle" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Expiry Alerts -->
+<div id="expiry-alerts"></div>
+
+<div class="row">
+    <!-- Recent Notifications -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Notifikasi Terbaru</h5>
+            </div>
+            <div class="card-body">
+                <?php if (empty($recent_notifications)): ?>
+                    <p class="text-muted">Tidak ada notifikasi baru</p>
+                <?php else: ?>
+                    <div class="list-group">
+                        <?php foreach ($recent_notifications as $notif): ?>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1"><?= htmlspecialchars($notif['title']) ?></h6>
+                                    <small><?= date('d/m/Y', strtotime($notif['created_at'])) ?></small>
+                                </div>
+                                <p class="mb-1"><?= htmlspecialchars($notif['message']) ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="<?= BASE_URL ?>/notifications" class="btn btn-sm btn-primary">
+                            Lihat Semua Notifikasi
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Employee Distribution -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Distribusi Karyawan per Unit</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="unitChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Documents Expiring Soon -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Dokumen Segera Kadaluarsa (7 Hari)</h5>
+    </div>
+    <div class="card-body">
+        <?php if (empty($expiring_soon)): ?>
+            <p class="text-muted">Tidak ada dokumen yang akan segera kadaluarsa</p>
+        <?php else: ?>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>NIP</th>
+                            <th>Kategori</th>
+                            <th>Dokumen</th>
+                            <th>Tanggal Kadaluarsa</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($expiring_soon as $doc): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($s['full_name']) ?></td>
+                            <td><?= htmlspecialchars($s['position']) ?></td>
+                            <td><?= htmlspecialchars($s['department']) ?></td>
+                            <td>
+                                <?php if ($s['has_str']): ?>
+                                    <?php
+                                    require_once dirname(__DIR__) . '/../Helpers/DateHelper.php';
+                                    echo DateHelper::getStatusBadge($s['str_days_remaining']);
+                                    ?>
+                                <?php else: ?>
+                                    <span class="badge badge-secondary">N/A</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($s['has_sip']): ?>
+                                    <?php echo DateHelper::getStatusBadge($s['sip_days_remaining']); ?>
+                                <?php else: ?>
+                                    <span class="badge badge-secondary">N/A</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a href="<?= BASE_URL ?>/staff/view/<?= $s['employee_id'] ?>" 
+                                   class="btn btn-sm btn-info" title="Lihat Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <?php if (in_array($_SESSION['user_role'], ['admin', 'hr'])): ?>
+                                <a href="<?= BASE_URL ?>/staff/edit/<?= $s['employee_id'] ?>" 
+                                   class="btn btn-sm btn-warning" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="<?= BASE_URL ?>/contracts/create/<?= $s['employee_id'] ?>" 
+                                   class="btn btn-sm btn-success" title="Tambah Kontrak">
+                                    <i class="bi bi-file-plus"></i>
+                                </a>
+                                <?php endif; ?>
+                                <?php if ($_SESSION['user_role'] === 'admin'): ?>
+                                <button onclick="confirmDelete(<?= $s['employee_id'] ?>)" 
+                                        class="btn btn-sm btn-danger" title="Hapus">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus data staff ini?')) {
+        window.location.href = '<?= BASE_URL ?>/staff/delete/' + id;
+    }
+}
+</script>
+
+<?php require_once dirname(__DIR__) . '/layouts/footer.php'; ?>

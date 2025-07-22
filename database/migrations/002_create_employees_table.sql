@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS employees (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_code VARCHAR(20) UNIQUE NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    birth_date DATE,
+    birth_place VARCHAR(100),
+    gender ENUM('L', 'P'),
+    address TEXT,
+    phone VARCHAR(20),
+    email VARCHAR(100),
+    employee_type ENUM('doctor', 'staff') NOT NULL,
+    join_date DATE,
+    photo VARCHAR(255),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_by INT,
+    updated_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_employee_code (employee_code),
+    INDEX idx_employee_type (employee_type)
+);
