@@ -1,5 +1,5 @@
 <?php
-define('BASE_URL', 'http://localhost/hospital-contract-app');
+define('BASE_URL', 'http://localhost/contract-app');
 define('UPLOAD_PATH', dirname(__DIR__) . '/public/uploads/');
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
 
