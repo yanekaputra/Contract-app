@@ -164,6 +164,31 @@ function confirmDelete(id) {
         window.location.href = '<?= BASE_URL ?>/staff/delete/' + id;
     }
 }
+
+
+// Unit Distribution Chart
+const ctx = document.getElementById('unitChart').getContext('2d');
+const unitChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: <?= json_encode(array_column($units_data, 'unit_name')) ?>,
+        datasets: [{
+            label: 'Jumlah Karyawan',
+            data: <?= json_encode(array_column($units_data, 'employee_count')) ?>,
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
 </script>
 
 <?php require_once dirname(__DIR__) . '/layouts/footer.php'; ?>

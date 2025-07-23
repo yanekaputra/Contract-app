@@ -19,6 +19,13 @@ $routes = [
     // Dashboard
     '/dashboard' => ['controller' => 'DashboardController', 'method' => 'index'],
     '/api/check-expiry' => ['controller' => 'DashboardController', 'method' => 'checkExpiry'],
+
+    // Users (Admin only)
+    '/users' => ['controller' => 'UserController', 'method' => 'index'],
+    '/users/create' => ['controller' => 'UserController', 'method' => 'create'],
+    '/users/store' => ['controller' => 'UserController', 'method' => 'store'],
+    '/profile' => ['controller' => 'UserController', 'method' => 'profile'],
+    '/change-password' => ['controller' => 'UserController', 'method' => 'changePassword'],
     
     // Doctors
     '/doctors' => ['controller' => 'DoctorController', 'method' => 'index'],
@@ -58,6 +65,10 @@ $patterns = [
     '#^/doctors/update/(\d+)$#' => ['controller' => 'DoctorController', 'method' => 'update'],
     '#^/doctors/view/(\d+)$#' => ['controller' => 'DoctorController', 'method' => 'view'],
     '#^/doctors/delete/(\d+)$#' => ['controller' => 'DoctorController', 'method' => 'delete'],
+
+    '#^/users/edit/(\d+)$#' => ['controller' => 'UserController', 'method' => 'edit'],
+    '#^/users/update/(\d+)$#' => ['controller' => 'UserController', 'method' => 'update'],
+    '#^/users/delete/(\d+)$#' => ['controller' => 'UserController', 'method' => 'delete'],
     
     '#^/staff/edit/(\d+)$#' => ['controller' => 'StaffController', 'method' => 'edit'],
     '#^/staff/update/(\d+)$#' => ['controller' => 'StaffController', 'method' => 'update'],
